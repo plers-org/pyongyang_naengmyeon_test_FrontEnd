@@ -32,6 +32,21 @@ export function Input({
   ...props
 }: InputProps) {
   const styles = COLOR_STYLES[color];
-
-  // TODO: layout/markup
+  return (
+    <div
+      className={[
+        "flex w-[295px] items-center gap-2 rounded-[14px] px-3 py-2.5",
+        styles.bg,
+        className,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {icon && <span className={`size-4 shrink-0 ${styles.icon}`}>{icon}</span>}
+      <input
+        className={`grow shrink-0 basis-0 border-none bg-transparent text-label outline-none ${styles.text}`}
+        {...props}
+      />
+    </div>
+  );
 }
