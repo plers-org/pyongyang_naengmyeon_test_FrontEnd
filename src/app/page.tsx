@@ -1,7 +1,12 @@
+"use client";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { DefaultButton } from "@/components/common/DefaultButton";
 
 export default function Home() {
+  const router = useRouter();
+
   return (
     <main className="flex min-h-screen flex-col items-center px-5 pt-31.5 pb-40">
       <h1 className="text-center text-headline1 text-warm-gray-90">
@@ -21,7 +26,9 @@ export default function Home() {
         height={240}
         className="mt-7.5"
       />
-      <DefaultButton className="mt-6">내 평냉 취향 찾기</DefaultButton>
+      <DefaultButton className="mt-6" onClick={() => router.push("/quiz/branch")}>
+        내 평냉 취향 찾기
+      </DefaultButton>
       <p className="mt-5 text-center text-caption4 text-warm-gray-60">
         약 2분 소요
       </p>
