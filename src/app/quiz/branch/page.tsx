@@ -14,7 +14,7 @@ export default function Page() {
 
   return (
     <main className="flex flex-col min-h-screen pt-11 pb-15">
-      <AppBar />
+      <AppBar onBack={() => router.back()} />
       <div className="flex flex-col px-5 pt-[54px]">
         <p className="text-caption2 text-orange-80">Q0</p>
         <h1 className="text-headline2 text-warm-gray-90 mt-3">
