@@ -88,6 +88,8 @@
   "semantic/button/text/option2/selected": "#835a16",
   "semantic/button/text/option3/default": "#8a6030",
   "semantic/button/text/option3/selected": "#67441c",
+  "semantic/button/text/option4/default": "#7a5838",
+  "semantic/button/text/option4/selected": "#7a5838",
   "Gray/70": "#848b9a",
   "Gray/80": "#5d6373",
   "semantic/button/text/primary/default": "#ffffff",
@@ -108,5 +110,6 @@
   "caption/captione3": "Font(family: \"Pretendard\", style: SemiBold, size: 12, weight: 600, lineHeight: 1.2000000476837158, letterSpacing: 0)",
   "caption/caption4": "Font(family: \"Pretendard\", style: Regular, size: 12, weight: 400, lineHeight: 1.2000000476837158, letterSpacing: 0)",
   "label/label": "Font(family: \"Pretendard\", style: Medium, size: 14, weight: 500, lineHeight: 1.399999976158142, letterSpacing: 0)",
+  "button/button2": "Font(family: \"Pretendard\", style: Medium, size: 15, weight: 500, lineHeight: 1.399999976158142, letterSpacing: 0)",
   "GrayScale/100": "#171a1c"
 }

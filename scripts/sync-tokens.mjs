@@ -1,15 +1,4 @@
-// Regenerates src/styles/tokens.css from tokens/figma-tokens.json.
-//
-// tokens/figma-tokens.json is a raw snapshot pulled from Figma variables
-// (node 114:1259 in the 평양냉면 지도 file) via the Figma MCP `get_variable_defs`
-// tool. When the designer updates values in Figma, re-fetch that snapshot
-// and overwrite tokens/figma-tokens.json, then run:
-//
 //   npm run sync-tokens
-//
-// Only "atomic/*", "semantic/*" and the typography groups
-// (headline|title|subtitle|body|caption|label) are ours — everything else
-// in the snapshot comes from a bundled Ant Design library and is ignored.
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -26,10 +15,9 @@ const TYPOGRAPHY_GROUPS = new Set([
   "body",
   "caption",
   "label",
+  "button",
 ]);
 
-// Known typos in the Figma variable names — fixed here rather than in Figma
-// so re-syncing doesn't require the designer to rename anything first.
 const NAME_FIXES = {
   defult: "default",
   deafult: "default",
@@ -130,7 +118,9 @@ ${typographyLines.join("\n")}
 `;
 
   writeFileSync(OUTPUT_PATH, css);
-  console.log(`Wrote ${colorLines.length} color, ${semanticLines.length} semantic, and ${typographyLines.length / 4} typography tokens to ${path.relative(process.cwd(), OUTPUT_PATH)}`);
+  console.log(
+    `Wrote ${colorLines.length} color, ${semanticLines.length} semantic, and ${typographyLines.length / 4} typography tokens to ${path.relative(process.cwd(), OUTPUT_PATH)}`,
+  );
 }
 
 main();

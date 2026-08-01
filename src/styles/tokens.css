@@ -76,6 +76,8 @@
   --color-button-option2-text-selected: #835a16;
   --color-button-option3-text-default: #8a6030;
   --color-button-option3-text-selected: #67441c;
+  --color-button-option4-text-default: #7a5838;
+  --color-button-option4-text-selected: #7a5838;
   --color-button-primary-text-default: #ffffff;
   --color-button-primary-text-pressed: #f4f3f2;
   --color-button-primary-text-disabled: #c2bfba;
@@ -125,4 +127,8 @@
   --text-label--line-height: 1.4;
   --text-label--letter-spacing: 0px;
   --text-label--font-weight: 500;
+  --text-button2: 15px;
+  --text-button2--line-height: 1.4;
+  --text-button2--letter-spacing: 0px;
+  --text-button2--font-weight: 500;
 }
