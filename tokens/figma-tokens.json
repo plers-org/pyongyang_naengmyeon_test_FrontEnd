@@ -88,6 +88,8 @@
   "semantic/button/text/option2/selected": "#835a16",
   "semantic/button/text/option3/default": "#8a6030",
   "semantic/button/text/option3/selected": "#67441c",
+  "semantic/button/text/option4/default": "#7a5838",
+  "semantic/button/text/option4/selected": "#7a5838",
   "Gray/70": "#848b9a",
   "Gray/80": "#5d6373",
   "semantic/button/text/primary/default": "#ffffff",
