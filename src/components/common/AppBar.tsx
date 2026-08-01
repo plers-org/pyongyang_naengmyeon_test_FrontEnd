@@ -9,6 +9,7 @@ export function AppBar({ onBack }: AppBarProps) {
     <div className="flex w-[375px] items-center bg-white">
       <button
         type="button"
+        aria-label="뒤로가기"
         onClick={onBack}
         className="flex h-[35.996px] pr-2 pl-3 justify-center items-center"
       >
