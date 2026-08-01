@@ -4,10 +4,12 @@ import { useState } from "react";
 import { AppBar } from "@/components/common/AppBar";
 import { DefaultButton } from "@/components/common/DefaultButton";
 import { OptionButton } from "@/components/common/OptionButton";
+import { useRouter } from "next/navigation";
 
 type Answer = "experienced" | "beginner";
 
 export default function Page() {
+  const router = useRouter();
   const [answer, setAnswer] = useState<Answer | null>(null);
 
   return (
@@ -44,6 +46,7 @@ export default function Page() {
         variant="primary"
         className="mt-auto mx-5"
         disabled={answer === null}
+        onClick={() => router.push(answer === "experienced" ? "/quiz/experienced" : "/quiz/beginner")}
       >
         다음
       </DefaultButton>
