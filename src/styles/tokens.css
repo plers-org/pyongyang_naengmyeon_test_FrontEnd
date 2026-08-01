@@ -125,4 +125,8 @@
   --text-label--line-height: 1.4;
   --text-label--letter-spacing: 0px;
   --text-label--font-weight: 500;
+  --text-button2: 15px;
+  --text-button2--line-height: 1.4;
+  --text-button2--letter-spacing: 0px;
+  --text-button2--font-weight: 500;
 }

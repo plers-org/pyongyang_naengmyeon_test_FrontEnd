@@ -47,7 +47,7 @@ export function OptionButton({
   return (
     <button
       className={[
-        "flex w-full cursor-pointer items-center justify-center rounded-2xl px-5 py-4 text-center text-[15px] font-medium leading-[1.4] transition-colors disabled:cursor-not-allowed disabled:opacity-50",
+        "flex w-full cursor-pointer items-center justify-center rounded-2xl px-5 py-4 text-center text-button2 transition-colors disabled:cursor-not-allowed disabled:opacity-50",
         colorStyles,
         className,
       ]

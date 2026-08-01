@@ -108,5 +108,6 @@
   "caption/captione3": "Font(family: \"Pretendard\", style: SemiBold, size: 12, weight: 600, lineHeight: 1.2000000476837158, letterSpacing: 0)",
   "caption/caption4": "Font(family: \"Pretendard\", style: Regular, size: 12, weight: 400, lineHeight: 1.2000000476837158, letterSpacing: 0)",
   "label/label": "Font(family: \"Pretendard\", style: Medium, size: 14, weight: 500, lineHeight: 1.399999976158142, letterSpacing: 0)",
+  "button/button2": "Font(family: \"Pretendard\", style: Medium, size: 15, weight: 500, lineHeight: 1.399999976158142, letterSpacing: 0)",
   "GrayScale/100": "#171a1c"
 }
