@@ -1,8 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import type { ReactNode } from "react";
-import { Badge } from "@/components/badge/Badge";
 import { DefaultButton } from "@/components/common/DefaultButton";
 import {
   CircleGraph,
@@ -10,17 +7,20 @@ import {
 } from "@/components/graph/CircleGraph";
 import { ArrowClockwiseIcon } from "@/components/icons/ArrowClockwiseIcon";
 import { GeoAltFill } from "@/components/icons/GeoAltFill";
+import { CharacterAvatar } from "./components/CharacterAvatar";
+import { Section } from "./components/Section";
+import { TypeMatchCard } from "./components/TypeMatchCard";
 
-type ResultType = "우래옥형" | "동치미형" | "의정부형" | "장충동형";
+export type ResultType = "우래옥형" | "동치미형" | "의정부형" | "장충동형";
 
-type TasteGraph = {
+export type TasteGraph = {
   육향: number;
   감칠맛: number;
   메밀향: number;
   산미: number;
 };
 
-type ResultData = {
+export type ResultData = {
   type: ResultType;
   themeColor: CircleGraphColor;
   characterImage: string;
@@ -32,6 +32,65 @@ type ResultData = {
   restaurants: string[];
   secondBest: ResultType;
   mostDistant: ResultType;
+};
+
+export type ThemeStyle = {
+  pageBg: string;
+  bannerBg: string;
+  eyebrowText: string;
+  headlineText: string;
+  subtitleText: string;
+  reasonText: string;
+  avatarBg: string;
+  pillBg: string;
+  pillText: string;
+};
+
+export const THEME_STYLES: Record<CircleGraphColor, ThemeStyle> = {
+  orange: {
+    pageBg: "bg-orange-10",
+    bannerBg: "bg-orange-50",
+    eyebrowText: "text-orange-60",
+    headlineText: "text-orange-90",
+    subtitleText: "text-orange-80",
+    reasonText: "text-orange-100",
+    avatarBg: "bg-orange-20",
+    pillBg: "bg-orange-20",
+    pillText: "text-orange-100",
+  },
+  blue: {
+    pageBg: "bg-blue-10",
+    bannerBg: "bg-blue-40",
+    eyebrowText: "text-blue-60",
+    headlineText: "text-blue-100",
+    subtitleText: "text-blue-60",
+    reasonText: "text-blue-100",
+    avatarBg: "bg-blue-10",
+    pillBg: "bg-blue-10",
+    pillText: "text-blue-100",
+  },
+  green: {
+    pageBg: "bg-green-10",
+    bannerBg: "bg-green-40",
+    eyebrowText: "text-green-60",
+    headlineText: "text-green-90",
+    subtitleText: "text-green-60",
+    reasonText: "text-green-100",
+    avatarBg: "bg-green-10",
+    pillBg: "bg-green-10",
+    pillText: "text-green-100",
+  },
+  warmGray: {
+    pageBg: "bg-warm-gray-10",
+    bannerBg: "bg-warm-gray-40",
+    eyebrowText: "text-warm-gray-60",
+    headlineText: "text-warm-gray-90",
+    subtitleText: "text-warm-gray-60",
+    reasonText: "text-warm-gray-90",
+    avatarBg: "bg-warm-gray-20",
+    pillBg: "bg-warm-gray-10",
+    pillText: "text-warm-gray-100",
+  },
 };
 
 const RESULTS: Record<ResultType, ResultData> = {
@@ -103,121 +162,6 @@ function isResultType(value: string): value is ResultType {
   return (RESULT_TYPES as string[]).includes(value);
 }
 
-type ThemeStyle = {
-  pageBg: string;
-  bannerBg: string;
-  eyebrowText: string;
-  headlineText: string;
-  subtitleText: string;
-  reasonText: string;
-  avatarBg: string;
-  pillBg: string;
-  pillText: string;
-};
-
-const THEME_STYLES: Record<CircleGraphColor, ThemeStyle> = {
-  orange: {
-    pageBg: "bg-orange-10",
-    bannerBg: "bg-orange-50",
-    eyebrowText: "text-orange-60",
-    headlineText: "text-orange-90",
-    subtitleText: "text-orange-80",
-    reasonText: "text-orange-100",
-    avatarBg: "bg-orange-20",
-    pillBg: "bg-orange-20",
-    pillText: "text-orange-100",
-  },
-  blue: {
-    pageBg: "bg-blue-10",
-    bannerBg: "bg-blue-40",
-    eyebrowText: "text-blue-60",
-    headlineText: "text-blue-100",
-    subtitleText: "text-blue-60",
-    reasonText: "text-blue-100",
-    avatarBg: "bg-blue-10",
-    pillBg: "bg-blue-10",
-    pillText: "text-blue-100",
-  },
-  green: {
-    pageBg: "bg-green-10",
-    bannerBg: "bg-green-40",
-    eyebrowText: "text-green-60",
-    headlineText: "text-green-90",
-    subtitleText: "text-green-60",
-    reasonText: "text-green-100",
-    avatarBg: "bg-green-10",
-    pillBg: "bg-green-10",
-    pillText: "text-green-100",
-  },
-  warmGray: {
-    pageBg: "bg-warm-gray-10",
-    bannerBg: "bg-warm-gray-40",
-    eyebrowText: "text-warm-gray-60",
-    headlineText: "text-warm-gray-90",
-    subtitleText: "text-warm-gray-60",
-    reasonText: "text-warm-gray-90",
-    avatarBg: "bg-warm-gray-20",
-    pillBg: "bg-warm-gray-10",
-    pillText: "text-warm-gray-100",
-  },
-};
-
-function Section({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div className="flex flex-col gap-4 rounded-2xl bg-white p-5">
-      <p className="text-title1 text-warm-gray-100">{title}</p>
-      {children}
-    </div>
-  );
-}
-
-function CharacterAvatar({
-  data,
-  size,
-  priority,
-}: {
-  data: ResultData;
-  size: number;
-  priority?: boolean;
-}) {
-  if (data.characterImage) {
-    return (
-      <Image
-        src={data.characterImage}
-        alt={data.type}
-        width={size}
-        height={size}
-        priority={priority}
-        className="shrink-0"
-      />
-    );
-  }
-  return (
-    <div
-      style={{ width: size, height: size }}
-      className={`shrink-0 rounded-full ${THEME_STYLES[data.themeColor].avatarBg}`}
-    />
-  );
-}
-
-function TypeMatchCard({
-  label,
-  data,
-  badgeColor,
-}: {
-  label: string;
-  data: ResultData;
-  badgeColor: "orange" | "green";
-}) {
-  return (
-    <div className="flex flex-1 flex-col items-center gap-4 rounded-2xl bg-white px-4 py-4">
-      <p className="text-subtitle1 text-warm-gray-60 text-center">{label}</p>
-      <CharacterAvatar data={data} size={100} />
-      <Badge color={badgeColor}>{data.type}</Badge>
-    </div>
-  );
-}
-
 export default async function Page({
   params,
 }: {
@@ -256,16 +200,15 @@ export default async function Page({
 
       <div className="flex flex-col gap-3 px-5">
         <div className={`rounded-2xl px-5 py-3.5 ${theme.bannerBg}`}>
-          <p className="text-title1 text-center text-white">{result.banner}</p>
+          <p className="text-title1 text-center text-white">
+            {result.banner}
+          </p>
         </div>
 
         <Section title="취향 그래프">
           <div className="flex flex-col gap-4">
             {Object.entries(result.graph).map(([label, value]) => (
-              <div
-                key={label}
-                className="flex items-center justify-center gap-2"
-              >
+              <div key={label} className="flex items-center justify-center gap-2">
                 <span className="text-caption2 text-neutral-60 w-15">
                   {label}
                 </span>
