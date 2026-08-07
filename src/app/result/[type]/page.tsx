@@ -1,9 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { ReactNode } from "react";
 import { Badge } from "@/components/badge/Badge";
 import { DefaultButton } from "@/components/common/DefaultButton";
-import { CircleGraph, type CircleGraphColor } from "@/components/graph/CircleGraph";
+import {
+  CircleGraph,
+  type CircleGraphColor,
+} from "@/components/graph/CircleGraph";
 import { ArrowClockwiseIcon } from "@/components/icons/ArrowClockwiseIcon";
 import { GeoAltFill } from "@/components/icons/GeoAltFill";
 
@@ -158,7 +162,15 @@ const THEME_STYLES: Record<CircleGraphColor, ThemeStyle> = {
   },
 };
 
-// 캐릭터 에셋이 준비된 타입만 실제 이미지를 쓰고, 나머지는 테마색 원으로 대체.
+function Section({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div className="flex flex-col gap-4 rounded-2xl bg-white p-5">
+      <p className="text-title1 text-warm-gray-100">{title}</p>
+      {children}
+    </div>
+  );
+}
+
 function CharacterAvatar({
   data,
   size,
@@ -188,8 +200,6 @@ function CharacterAvatar({
   );
 }
 
-// 두 번째로 잘 맞는 유형/가장 거리가 먼 유형 배지는 Figma 4개 프레임 전부
-// 오렌지/그린 고정이라 그대로 따름 (테마색과 무관).
 function TypeMatchCard({
   label,
   data,
@@ -246,16 +256,16 @@ export default async function Page({
 
       <div className="flex flex-col gap-3 px-5">
         <div className={`rounded-2xl px-5 py-3.5 ${theme.bannerBg}`}>
-          <p className="text-title1 text-center text-white">
-            {result.banner}
-          </p>
+          <p className="text-title1 text-center text-white">{result.banner}</p>
         </div>
 
-        <div className="flex flex-col gap-4 rounded-2xl bg-white p-5">
-          <p className="text-title1 text-warm-gray-100">취향 그래프</p>
+        <Section title="취향 그래프">
           <div className="flex flex-col gap-4">
             {Object.entries(result.graph).map(([label, value]) => (
-              <div key={label} className="flex items-center justify-center gap-2">
+              <div
+                key={label}
+                className="flex items-center justify-center gap-2"
+              >
                 <span className="text-caption2 text-neutral-60 w-15">
                   {label}
                 </span>
@@ -266,15 +276,13 @@ export default async function Page({
               </div>
             ))}
           </div>
-        </div>
+        </Section>
 
-        <div className="flex flex-col gap-4 rounded-2xl bg-white p-5">
-          <p className="text-title1 text-warm-gray-100">유형 도출 이유</p>
+        <Section title="유형 도출 이유">
           <p className={`text-body1 ${theme.reasonText}`}>{result.reason}</p>
-        </div>
+        </Section>
 
-        <div className="flex flex-col gap-4 rounded-2xl bg-white p-5">
-          <p className="text-title1 text-warm-gray-100">잘 맞는 평냉집 추천</p>
+        <Section title="잘 맞는 평냉집 추천">
           <div className="flex flex-col gap-2">
             {result.restaurants.map((restaurant, i) => (
               <div
@@ -288,7 +296,7 @@ export default async function Page({
               </div>
             ))}
           </div>
-        </div>
+        </Section>
 
         <div className="flex gap-3">
           <TypeMatchCard
