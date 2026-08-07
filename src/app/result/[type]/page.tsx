@@ -1,13 +1,12 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DefaultButton } from "@/components/common/DefaultButton";
 import {
   CircleGraph,
   type CircleGraphColor,
 } from "@/components/graph/CircleGraph";
-import { ArrowClockwiseIcon } from "@/components/icons/ArrowClockwiseIcon";
 import { GeoAltFill } from "@/components/icons/GeoAltFill";
 import { CharacterAvatar } from "./components/CharacterAvatar";
+import { RestartButton } from "./components/RestartButton";
 import { Section } from "./components/Section";
 import { TypeMatchCard } from "./components/TypeMatchCard";
 
@@ -168,7 +167,13 @@ export default async function Page({
   params: Promise<{ type: string }>;
 }) {
   const { type: rawType } = await params;
-  const type = decodeURIComponent(rawType);
+
+  let type: string;
+  try {
+    type = decodeURIComponent(rawType);
+  } catch {
+    notFound();
+  }
 
   if (!isResultType(type)) {
     notFound();
@@ -200,7 +205,7 @@ export default async function Page({
 
       <div className="flex flex-col gap-3 px-5">
         <div className={`rounded-2xl px-5 py-3.5 ${theme.bannerBg}`}>
-          <p className="text-title1 text-center text-white">
+          <p className={`text-title1 text-center ${theme.reasonText}`}>
             {result.banner}
           </p>
         </div>
@@ -256,14 +261,11 @@ export default async function Page({
       </div>
 
       <div className="mt-6 flex flex-col gap-3 px-5 pt-3 pb-8">
-        <DefaultButton variant="primary" icon={<GeoAltFill />}>
+        {/* TODO: 지도 라우트 나오면 활성화 */}
+        <DefaultButton variant="primary" icon={<GeoAltFill />} disabled>
           평냉 지도 보기
         </DefaultButton>
-        <Link href="/quiz/branch" className="contents">
-          <DefaultButton variant="secondary" icon={<ArrowClockwiseIcon />}>
-            다시 테스트 하기
-          </DefaultButton>
-        </Link>
+        <RestartButton />
       </div>
     </main>
   );
