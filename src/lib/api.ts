@@ -1,5 +1,3 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
 export class ApiError extends Error {
   constructor(
     public status: number,
@@ -14,6 +12,8 @@ export async function apiFetch<T>(
   path: string,
   init?: RequestInit,
 ): Promise<T> {
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
   if (!API_BASE_URL) {
     throw new Error("NEXT_PUBLIC_API_BASE_URL이 설정되지 않았습니다.");
   }
