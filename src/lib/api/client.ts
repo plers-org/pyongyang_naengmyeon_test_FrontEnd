@@ -8,16 +8,21 @@ export class ApiError extends Error {
   }
 }
 
+function resolveUrl(path: string): string {
+  if (typeof window === "undefined") {
+    const origin = process.env.API_ORIGIN;
+    if (!origin) {
+      throw new Error("API_ORIGIN이 설정되지 않았습니다.");
+    }
+    return `${origin}/api${path}`;
+  }
+  return `/backend${path}`;
+}
+
 export async function apiFetch<T>(
   path: string,
   init?: RequestInit,
 ): Promise<T> {
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-  if (!API_BASE_URL) {
-    throw new Error("NEXT_PUBLIC_API_BASE_URL이 설정되지 않았습니다.");
-  }
-
   const headers = new Headers(init?.headers);
   if (!headers.has("Accept")) {
     headers.set("Accept", "application/json");
@@ -26,7 +31,7 @@ export async function apiFetch<T>(
     headers.set("Content-Type", "application/json");
   }
 
-  const res = await fetch(`${API_BASE_URL}${path}`, {
+  const res = await fetch(resolveUrl(path), {
     ...init,
     headers,
   });
