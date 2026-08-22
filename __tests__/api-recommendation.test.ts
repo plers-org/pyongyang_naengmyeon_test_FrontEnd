@@ -1,15 +1,13 @@
+/** @jest-environment node */
 import { getRecommendationQuestions } from "@/lib/api/recommendation";
 
 const originalFetch = global.fetch;
 
 beforeEach(() => {
-  process.env.NEXT_PUBLIC_API_BASE_URL = "http://test-api";
+  process.env.API_ORIGIN = "http://test-api";
   global.fetch = jest.fn().mockResolvedValue({
     ok: true,
-    json: async () => ({
-      experience_level: "expert",
-      questions: [],
-    }),
+    json: async () => ({ experience_level: "expert", questions: [] }),
   });
 });
 
@@ -18,7 +16,7 @@ afterEach(() => {
   jest.restoreAllMocks();
 });
 
-it("experience_level을 경로에 넣어서 호출한다", async () => {
+it("experience_level을 경로에 넣어서 백엔드를 직접 호출한다 (서버 환경)", async () => {
   await getRecommendationQuestions("expert");
 
   expect(global.fetch).toHaveBeenCalledWith(

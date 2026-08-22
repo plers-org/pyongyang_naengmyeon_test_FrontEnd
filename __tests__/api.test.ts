@@ -1,18 +1,18 @@
 import { apiFetch, ApiError } from "@/lib/api/client";
 
-const originalEnv = process.env.NEXT_PUBLIC_API_BASE_URL;
+const originalEnv = process.env.API_ORIGIN;
 const originalFetch = global.fetch;
 
 beforeEach(() => {
-  process.env.NEXT_PUBLIC_API_BASE_URL = "http://test-api";
+  process.env.API_ORIGIN = "http://test-api";
   global.fetch = jest.fn();
 });
 
 afterEach(() => {
   if (originalEnv === undefined) {
-    delete process.env.NEXT_PUBLIC_API_BASE_URL;
+    delete process.env.API_ORIGIN;
   } else {
-    process.env.NEXT_PUBLIC_API_BASE_URL = originalEnv;
+    process.env.API_ORIGIN = originalEnv;
   }
   global.fetch = originalFetch;
   jest.restoreAllMocks();
@@ -24,7 +24,7 @@ it("정상 응답이면 JSON을 반환한다", async () => {
     json: async () => ({ hello: "world" }),
   });
 
-  await expect(apiFetch("/api/test")).resolves.toEqual({ hello: "world" });
+  await expect(apiFetch("/test")).resolves.toEqual({ hello: "world" });
 });
 
 it("실패 응답이면 ApiError를 던진다", async () => {
@@ -34,7 +34,7 @@ it("실패 응답이면 ApiError를 던진다", async () => {
     json: async () => ({ detail: [{ msg: "잘못된 요청" }] }),
   });
 
-  await expect(apiFetch("/api/test")).rejects.toThrow(ApiError);
+  await expect(apiFetch("/test")).rejects.toThrow(ApiError);
 });
 
 it("Headers 인스턴스로 넘긴 커스텀 헤더도 유지된다", async () => {
