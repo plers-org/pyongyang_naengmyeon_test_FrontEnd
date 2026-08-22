@@ -9,6 +9,11 @@ import {
   type OptionButtonVariant,
 } from "@/components/common/OptionButton";
 import { QuestionProgress } from "@/components/graph/QuestionProgress";
+import { ApiError } from "@/lib/api/client";
+import {
+  submitRecommendation,
+  type ExperienceLevel,
+} from "@/lib/api/recommendation";
 import type { RecommendationQuestion } from "@/lib/api/types";
 
 const OPTION_VARIANTS: OptionButtonVariant[] = [
@@ -20,12 +25,16 @@ const OPTION_VARIANTS: OptionButtonVariant[] = [
 
 export function QuizClient({
   questions,
+  experienceLevel,
 }: {
   questions: RecommendationQuestion[];
+  experienceLevel: ExperienceLevel;
 }) {
   const router = useRouter();
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   if (questions.length === 0) {
     return (
@@ -56,12 +65,35 @@ export function QuizClient({
     setQuestionIndex((i) => i - 1);
   };
 
-  const goNext = () => {
-    if (isLastQuestion) {
-      // TODO: 다음 이슈에서 submitRecommendation 호출 붙임
+  const goNext = async () => {
+    if (!isLastQuestion) {
+      setQuestionIndex((i) => i + 1);
       return;
     }
-    setQuestionIndex((i) => i + 1);
+
+    setSubmitError(null);
+    setIsSubmitting(true);
+    try {
+      const result = await submitRecommendation({
+        experience_level: experienceLevel,
+        answers: Object.entries(answers).map(
+          ([questionId, selectedChoiceId]) => ({
+            question_id: Number(questionId),
+            selected_choice_id: selectedChoiceId,
+          }),
+        ),
+      });
+      sessionStorage.setItem("quizResult", JSON.stringify(result));
+      router.push("/result");
+    } catch (error) {
+      setSubmitError(
+        error instanceof ApiError
+          ? error.message
+          : "결과를 받아오지 못했어요. 다시 시도해주세요.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -91,14 +123,21 @@ export function QuizClient({
             </OptionButton>
           ))}
         </div>
+        {submitError && (
+          <p className="text-label text-orange-80 mt-3">{submitError}</p>
+        )}
       </div>
       <DefaultButton
         variant="primary"
         className="mt-auto mx-5"
-        disabled={selectedChoiceId === null}
+        disabled={selectedChoiceId === null || isSubmitting}
         onClick={goNext}
       >
-        {isLastQuestion ? "평냉 취향 확인하기" : "다음"}
+        {isSubmitting
+          ? "제출 중..."
+          : isLastQuestion
+            ? "평냉 취향 확인하기"
+            : "다음"}
       </DefaultButton>
     </main>
   );

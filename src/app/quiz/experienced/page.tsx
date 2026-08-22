@@ -3,5 +3,5 @@ import { QuizClient } from "../QuizClient";
 
 export default async function Page() {
   const data = await getRecommendationQuestions("expert");
-  return <QuizClient questions={data.questions} />;
+  return <QuizClient questions={data.questions} experienceLevel="expert" />;
 }
