@@ -1,3 +1,4 @@
+/** @jest-environment node */
 import { apiFetch, ApiError } from "@/lib/api/client";
 
 const originalEnv = process.env.API_ORIGIN;
@@ -43,7 +44,7 @@ it("Headers 인스턴스로 넘긴 커스텀 헤더도 유지된다", async () =
     json: async () => ({}),
   });
 
-  await apiFetch("/api/test", {
+  await apiFetch("/test", {
     headers: new Headers({ Authorization: "Bearer test" }),
   });
 
