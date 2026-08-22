@@ -27,6 +27,19 @@ export function QuizClient({
   const [questionIndex, setQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
 
+  if (questions.length === 0) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center gap-4 px-5 text-center">
+        <p className="text-headline2 text-warm-gray-90">
+          문항을 불러오지 못했어요
+        </p>
+        <DefaultButton variant="primary" onClick={() => router.back()}>
+          돌아가기
+        </DefaultButton>
+      </main>
+    );
+  }
+
   const question = questions[questionIndex];
   const selectedChoiceId = answers[question.question_id] ?? null;
   const isLastQuestion = questionIndex === questions.length - 1;
