@@ -1,3 +1,5 @@
+import { API_PREFIX, PROXY_PREFIX, getApiOrigin } from "./config";
+
 export class ApiError extends Error {
   constructor(
     public status: number,
@@ -10,13 +12,9 @@ export class ApiError extends Error {
 
 function resolveUrl(path: string): string {
   if (typeof window === "undefined") {
-    const origin = process.env.API_ORIGIN;
-    if (!origin) {
-      throw new Error("API_ORIGIN이 설정되지 않았습니다.");
-    }
-    return `${origin}/api${path}`;
+    return `${getApiOrigin()}${API_PREFIX}${path}`;
   }
-  return `/backend${path}`;
+  return `${PROXY_PREFIX}${path}`;
 }
 
 export async function apiFetch<T>(

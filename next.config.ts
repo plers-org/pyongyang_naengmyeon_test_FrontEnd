@@ -1,11 +1,12 @@
 import type { NextConfig } from "next";
+import { API_PREFIX, PROXY_PREFIX, getApiOrigin } from "./src/lib/api/config";
 
 const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: "/backend/:path*",
-        destination: `${process.env.API_ORIGIN}/api/:path*`,
+        source: `${PROXY_PREFIX}/:path*`,
+        destination: `${getApiOrigin()}${API_PREFIX}/:path*`,
       },
     ];
   },
