@@ -167,8 +167,12 @@ export default function Page() {
     // sessionStorage는 브라우저 전용이라 하이드레이션 이후에만 읽을 수 있음
     const raw = sessionStorage.getItem("quizResult");
     if (raw) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setResult(JSON.parse(raw));
+      try {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setResult(JSON.parse(raw));
+      } catch {
+        sessionStorage.removeItem("quizResult");
+      }
     }
     setLoaded(true);
   }, []);
