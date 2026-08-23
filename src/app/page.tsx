@@ -19,13 +19,36 @@ export default function Home() {
         <br />
         나에게 딱 맞는 평양냉면 스타일을 찾아봐요!
       </p>
-      <Image
-        src="/characters/intro-characters.png"
-        alt=""
-        width={240}
-        height={240}
-        className="mt-7.5"
-      />
+      <div className="mt-7.5 grid w-60 grid-cols-2 grid-rows-2">
+        <Image
+          src="/characters/우래옥형.svg"
+          alt=""
+          width={120}
+          height={120}
+          className="aspect-square h-30 justify-self-stretch"
+        />
+        <Image
+          src="/characters/의정부형.svg"
+          alt=""
+          width={120}
+          height={120}
+          className="aspect-square h-30 justify-self-stretch"
+        />
+        <Image
+          src="/characters/동치미형.svg"
+          alt=""
+          width={120}
+          height={120}
+          className="aspect-square h-30 justify-self-stretch"
+        />
+        <Image
+          src="/characters/장충동형.svg"
+          alt=""
+          width={120}
+          height={120}
+          className="aspect-square h-30 justify-self-stretch"
+        />
+      </div>
       <DefaultButton className="mt-6" onClick={() => router.push("/quiz/branch")}>
         내 평냉 취향 찾기
       </DefaultButton>
