@@ -270,9 +270,10 @@ export default function Page() {
               </p>
             ) : (
               recommended_restaurants.map((r, i) => {
+                const trimmedMapUrl = r.map_url?.trim();
                 const mapUrl =
-                  r.map_url && /^https?:\/\//i.test(r.map_url)
-                    ? r.map_url
+                  trimmedMapUrl && /^https?:\/\//i.test(trimmedMapUrl)
+                    ? trimmedMapUrl
                     : undefined;
                 const Pill = mapUrl ? "a" : "div";
 
