@@ -269,22 +269,34 @@ export default function Page() {
                 {result.message}
               </p>
             ) : (
-              recommended_restaurants.map((r, i) => (
-                <a
-                  key={`${r.restaurant_name}-${i}`}
-                  href={r.map_url ?? undefined}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`flex items-center gap-2 rounded-[14px] px-3 py-2.5 ${theme.pillBg}`}
-                >
-                  <GeoAltFill
-                    className={`size-4 shrink-0 ${theme.pillIconColor}`}
-                  />
-                  <span className={`text-label ${theme.pillText}`}>
-                    {r.restaurant_name}
-                  </span>
-                </a>
-              ))
+              recommended_restaurants.map((r, i) => {
+                const mapUrl =
+                  r.map_url && /^https?:\/\//i.test(r.map_url)
+                    ? r.map_url
+                    : undefined;
+                const Pill = mapUrl ? "a" : "div";
+
+                return (
+                  <Pill
+                    key={`${r.restaurant_name}-${i}`}
+                    {...(mapUrl
+                      ? {
+                          href: mapUrl,
+                          target: "_blank",
+                          rel: "noopener noreferrer",
+                        }
+                      : {})}
+                    className={`flex items-center gap-2 rounded-[14px] px-3 py-2.5 ${theme.pillBg}`}
+                  >
+                    <GeoAltFill
+                      className={`size-4 shrink-0 ${theme.pillIconColor}`}
+                    />
+                    <span className={`text-label ${theme.pillText}`}>
+                      {r.restaurant_name}
+                    </span>
+                  </Pill>
+                );
+              })
             )}
           </div>
         </Section>
