@@ -270,8 +270,11 @@ export default function Page() {
               </p>
             ) : (
               recommended_restaurants.map((r, i) => (
-                <div
+                <a
                   key={`${r.restaurant_name}-${i}`}
+                  href={r.map_url ?? undefined}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={`flex items-center gap-2 rounded-[14px] px-3 py-2.5 ${theme.pillBg}`}
                 >
                   <GeoAltFill
@@ -280,7 +283,7 @@ export default function Page() {
                   <span className={`text-label ${theme.pillText}`}>
                     {r.restaurant_name}
                   </span>
-                </div>
+                </a>
               ))
             )}
           </div>
