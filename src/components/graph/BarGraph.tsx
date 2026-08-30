@@ -10,7 +10,7 @@ export function BarGraph({ value, max = 6, className }: BarGraphProps) {
   return (
     <div
       className={[
-        "h-1.5 w-[288px] shrink-0 items-center overflow-hidden rounded-full bg-orange-20",
+        "h-1.5 w-71.75 shrink-0 items-center overflow-hidden rounded-full bg-orange-20",
         className,
       ]
         .filter(Boolean)

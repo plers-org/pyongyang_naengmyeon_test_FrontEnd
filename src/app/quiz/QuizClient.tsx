@@ -99,10 +99,10 @@ export function QuizClient({
   return (
     <main className="flex flex-col min-h-screen pt-11 pb-15">
       <AppBar onBack={goBack} />
-      <div className="flex flex-col px-5 pt-4">
+      <div className="flex flex-col px-5 pt-3">
         <QuestionProgress
-          current={questionIndex + 1}
-          total={questions.length}
+          current={questionIndex + 2}
+          total={questions.length + 1}
         />
         <p className="text-caption2 text-orange-80 mt-5">
           Q{question.question_id + 1}
