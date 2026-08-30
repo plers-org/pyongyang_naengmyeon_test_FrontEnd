@@ -105,7 +105,7 @@ export function QuizClient({
           total={questions.length}
         />
         <p className="text-caption2 text-orange-80 mt-5">
-          Q{question.question_id}
+          Q{question.question_id + 1}
         </p>
         <h1 className="text-headline2 text-warm-gray-90 mt-3 h-32 whitespace-pre-line">
           {question.question_text}
