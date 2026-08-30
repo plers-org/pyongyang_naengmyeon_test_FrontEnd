@@ -11,6 +11,7 @@ import {
 } from "@/components/graph/CircleGraph";
 import { ArrowClockwiseIcon } from "@/components/icons/ArrowClockwiseIcon";
 import { GeoAltFill } from "@/components/icons/GeoAltFill";
+import { ShareIcon } from "@/components/icons/ShareIcon";
 import type { RecommendationResultResponse } from "@/lib/api/types";
 
 type TypeKey = "uraeok" | "uijeongbu" | "jangchungdong" | "dongchimi";
@@ -198,12 +199,36 @@ export default function Page() {
     );
   }
 
-  const { primary_type, secondary_type, farthest_type, taste_profile, recommended_restaurants, status } = result;
+  const {
+    primary_type,
+    secondary_type,
+    farthest_type,
+    taste_profile,
+    recommended_restaurants,
+    status,
+  } = result;
   const themeColor = KEY_TO_THEME[primary_type.key as TypeKey];
   const theme = THEME_STYLES[themeColor];
 
+  const handleShare = async () => {
+    const shareData = {
+      title: "평냉 취향 테스트",
+      text: `나는 ${primary_type.name}! ${primary_type.badge}`,
+      url: window.location.origin,
+    };
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch {
+        // 사용자가 공유를 취소한 경우 등은 무시
+      }
+      return;
+    }
+    await navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
+  };
+
   return (
-    <main className={`flex min-h-screen flex-col ${theme.pageBg}`}>
+    <main className={`flex min-h-screen flex-col pb-15 ${theme.pageBg}`}>
       <section className="flex flex-col items-center px-5 pt-15 pb-10">
         <p className={`text-caption3 ${theme.eyebrowText}`}>
           당신의 평냉 타입은?
@@ -265,9 +290,7 @@ export default function Page() {
         <Section title="잘 맞는 평냉집 추천">
           <div className="flex flex-col gap-2">
             {status === "no_recommendation" ? (
-              <p className="text-body1 text-warm-gray-60">
-                {result.message}
-              </p>
+              <p className="text-body1 text-warm-gray-60">{result.message}</p>
             ) : (
               recommended_restaurants.map((r, i) => {
                 const trimmedMapUrl = r.map_url?.trim();
@@ -316,21 +339,35 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="mt-6 flex flex-col gap-3 px-5 pt-3 pb-8">
+      <div className="px-5 pt-3">
         {/* TODO: 지도 라우트 나오면 활성화 */}
         <DefaultButton variant="primary" icon={<GeoAltFill />} disabled>
           평냉 지도 보기
         </DefaultButton>
-        <DefaultButton
-          variant="secondary"
-          icon={<ArrowClockwiseIcon />}
+      </div>
+
+      <div
+        className={`sticky bottom-0 mt-11.5 flex items-start gap-3 px-5 py-3 ${theme.pageBg}`}
+      >
+        <button
+          type="button"
+          aria-label="다시 테스트 하기"
+          className="flex size-13.5 shrink-0 items-center justify-center gap-2 rounded-xl border border-neutral-10 bg-white p-3.5"
           onClick={() => {
             sessionStorage.removeItem("quizResult");
             router.push("/quiz/branch");
           }}
         >
-          다시 테스트 하기
-        </DefaultButton>
+          <ArrowClockwiseIcon className="size-4 text-neutral-70" />
+        </button>
+        <button
+          type="button"
+          className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-neutral-10 bg-button-secondary-bg-default px-4 py-3.75 text-[16px] font-semibold text-button-secondary-text-default active:bg-button-secondary-bg-pressed active:text-button-secondary-text-pressed"
+          onClick={handleShare}
+        >
+          <ShareIcon className="size-4" />
+          결과 공유하기
+        </button>
       </div>
     </main>
   );
