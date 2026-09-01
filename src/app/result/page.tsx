@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/badge/Badge";
+import { Tag } from "@/components/tag/Tag";
 import { DefaultButton } from "@/components/common/DefaultButton";
 import {
   CircleGraph,
@@ -28,6 +29,13 @@ const CHARACTER_IMAGE: Record<TypeKey, string> = {
   uijeongbu: "/characters/의정부형.svg",
   jangchungdong: "/characters/장충동형.svg",
   dongchimi: "/characters/동치미형.svg",
+};
+
+const TYPE_TAGS: Record<TypeKey, string[]> = {
+  uraeok: ["진한육향", "깊은감칠맛", "본질파"],
+  dongchimi: ["시원한동치미", "깔끔한끝맛", "청량파"],
+  uijeongbu: ["맑고담백", "은근한여운", "담백파"],
+  jangchungdong: ["구수한육향", "풍성한감칠맛", "균형파"],
 };
 
 type ThemeStyle = {
@@ -134,10 +142,19 @@ function TypeMatchCard({
   name: string;
 }) {
   return (
-    <div className="flex flex-1 flex-col items-center gap-4 rounded-2xl bg-white px-4 py-4">
+    <div className="flex flex-1 flex-col items-center rounded-2xl bg-white px-4 py-4">
       <p className="text-subtitle1 text-warm-gray-60 text-center">{label}</p>
-      <CharacterAvatar typeKey={typeKey} size={100} />
-      <Badge color={KEY_TO_THEME[typeKey]}>{name}</Badge>
+      <div className="mt-3">
+        <CharacterAvatar typeKey={typeKey} size={100} />
+      </div>
+      <div className="mt-2 flex flex-col items-center gap-3">
+        <Badge color={KEY_TO_THEME[typeKey]}>{name}</Badge>
+        <div className="flex flex-col items-center gap-1.5">
+          {TYPE_TAGS[typeKey].map((tag) => (
+            <Tag key={tag}>{tag}</Tag>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
