@@ -1,179 +1,17 @@
 "use client";
 
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Badge } from "@/components/badge/Badge";
-import { ErrorView } from "@/components/common/ErrorView";
-import { Tag } from "@/components/tag/Tag";
 import { DefaultButton } from "@/components/common/DefaultButton";
-import {
-  CircleGraph,
-  type CircleGraphColor,
-} from "@/components/graph/CircleGraph";
-import { ArrowClockwiseIcon } from "@/components/icons/ArrowClockwiseIcon";
+import { ErrorView } from "@/components/common/ErrorView";
+import { CircleGraph } from "@/components/graph/CircleGraph";
 import { GeoAltFill } from "@/components/icons/GeoAltFill";
-import { ShareIcon } from "@/components/icons/ShareIcon";
 import type { RecommendationResultResponse } from "@/lib/api/types";
-
-type TypeKey = "uraeok" | "uijeongbu" | "jangchungdong" | "dongchimi";
-
-const KEY_TO_THEME: Record<TypeKey, CircleGraphColor> = {
-  uraeok: "orange",
-  dongchimi: "blue",
-  uijeongbu: "green",
-  jangchungdong: "warmGray",
-};
-
-const CHARACTER_IMAGE: Record<TypeKey, string> = {
-  uraeok: "/characters/우래옥형.svg",
-  uijeongbu: "/characters/의정부형.svg",
-  jangchungdong: "/characters/장충동형.svg",
-  dongchimi: "/characters/동치미형.svg",
-};
-
-const TYPE_TAGS: Record<TypeKey, string[]> = {
-  uraeok: ["진한육향", "깊은감칠맛", "본질파"],
-  dongchimi: ["시원한동치미", "깔끔한끝맛", "청량파"],
-  uijeongbu: ["맑고담백", "은근한여운", "담백파"],
-  jangchungdong: ["구수한육향", "풍성한감칠맛", "균형파"],
-};
-
-type ThemeStyle = {
-  pageBg: string;
-  bannerBg: string;
-  eyebrowText: string;
-  headlineText: string;
-  subtitleText: string;
-  reasonText: string;
-  avatarBg: string;
-  pillBg: string;
-  pillText: string;
-  pillIconColor: string;
-};
-
-const THEME_STYLES: Record<CircleGraphColor, ThemeStyle> = {
-  orange: {
-    pageBg: "bg-orange-10",
-    bannerBg: "bg-orange-50",
-    eyebrowText: "text-orange-60",
-    headlineText: "text-orange-90",
-    subtitleText: "text-orange-80",
-    reasonText: "text-orange-100",
-    avatarBg: "bg-orange-20",
-    pillBg: "bg-orange-20",
-    pillText: "text-orange-100",
-    pillIconColor: "text-orange-50",
-  },
-  blue: {
-    pageBg: "bg-blue-10",
-    bannerBg: "bg-blue-40",
-    eyebrowText: "text-blue-60",
-    headlineText: "text-blue-100",
-    subtitleText: "text-blue-60",
-    reasonText: "text-blue-100",
-    avatarBg: "bg-blue-10",
-    pillBg: "bg-blue-10",
-    pillText: "text-blue-100",
-    pillIconColor: "text-blue-40",
-  },
-  green: {
-    pageBg: "bg-green-10",
-    bannerBg: "bg-green-40",
-    eyebrowText: "text-green-60",
-    headlineText: "text-green-90",
-    subtitleText: "text-green-60",
-    reasonText: "text-green-100",
-    avatarBg: "bg-green-10",
-    pillBg: "bg-green-10",
-    pillText: "text-green-100",
-    pillIconColor: "text-green-40",
-  },
-  warmGray: {
-    pageBg: "bg-warm-gray-10",
-    bannerBg: "bg-warm-gray-40",
-    eyebrowText: "text-warm-gray-60",
-    headlineText: "text-warm-gray-90",
-    subtitleText: "text-warm-gray-60",
-    reasonText: "text-warm-gray-90",
-    avatarBg: "bg-warm-gray-20",
-    pillBg: "bg-warm-gray-10",
-    pillText: "text-warm-gray-100",
-    pillIconColor: "text-warm-gray-40",
-  },
-};
-
-function CharacterAvatar({
-  typeKey,
-  size,
-  priority,
-}: {
-  typeKey: TypeKey;
-  size: number;
-  priority?: boolean;
-}) {
-  const src = CHARACTER_IMAGE[typeKey];
-  if (src) {
-    return (
-      <Image
-        src={encodeURI(src)}
-        alt={typeKey}
-        width={size}
-        height={size}
-        priority={priority}
-        className="shrink-0"
-      />
-    );
-  }
-  return (
-    <div
-      style={{ width: size, height: size }}
-      className={`shrink-0 rounded-full ${THEME_STYLES[KEY_TO_THEME[typeKey]].avatarBg}`}
-    />
-  );
-}
-
-function TypeMatchCard({
-  label,
-  typeKey,
-  name,
-}: {
-  label: string;
-  typeKey: TypeKey;
-  name: string;
-}) {
-  return (
-    <div className="flex flex-1 flex-col items-center rounded-2xl bg-white px-4 py-4">
-      <p className="text-subtitle1 text-warm-gray-60 text-center">{label}</p>
-      <div className="mt-3">
-        <CharacterAvatar typeKey={typeKey} size={100} />
-      </div>
-      <div className="mt-2 flex flex-col items-center gap-3">
-        <Badge color={KEY_TO_THEME[typeKey]}>{name}</Badge>
-        <div className="flex flex-col items-center gap-1.5">
-          {TYPE_TAGS[typeKey].map((tag) => (
-            <Tag key={tag}>{tag}</Tag>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Section({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-4 rounded-2xl bg-white p-5">
-      <p className="text-title1 text-warm-gray-100">{title}</p>
-      {children}
-    </div>
-  );
-}
+import { CharacterAvatar } from "./components/CharacterAvatar";
+import { ResultShareBar } from "./components/ResultShareBar";
+import { Section } from "./components/Section";
+import { TypeMatchCard } from "./components/TypeMatchCard";
+import { KEY_TO_THEME, THEME_STYLES, type TypeKey } from "./theme";
 
 export default function Page() {
   const router = useRouter();
@@ -221,23 +59,6 @@ export default function Page() {
   } = result;
   const themeColor = KEY_TO_THEME[primary_type.key as TypeKey];
   const theme = THEME_STYLES[themeColor];
-
-  const handleShare = async () => {
-    const shareData = {
-      title: "평냉 취향 테스트",
-      text: `나는 ${primary_type.name}! ${primary_type.badge}`,
-      url: window.location.origin,
-    };
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-      } catch {
-        // 사용자가 공유를 취소한 경우 등은 무시
-      }
-      return;
-    }
-    await navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
-  };
 
   return (
     <main className={`flex min-h-screen flex-col pb-15 ${theme.pageBg}`}>
@@ -358,29 +179,14 @@ export default function Page() {
         </DefaultButton>
       </div>
 
-      <div
-        className={`sticky bottom-0 mt-11.5 flex items-start gap-3 px-5 py-3 ${theme.pageBg}`}
-      >
-        <button
-          type="button"
-          aria-label="다시 테스트 하기"
-          className="flex size-13.5 shrink-0 items-center justify-center gap-2 rounded-xl border border-neutral-10 bg-white p-3.5"
-          onClick={() => {
-            sessionStorage.removeItem("quizResult");
-            router.push("/quiz/branch");
-          }}
-        >
-          <ArrowClockwiseIcon className="size-4 text-neutral-70" />
-        </button>
-        <button
-          type="button"
-          className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-neutral-10 bg-button-secondary-bg-default px-4 py-3.75 text-[16px] font-semibold text-button-secondary-text-default active:bg-button-secondary-bg-pressed active:text-button-secondary-text-pressed"
-          onClick={handleShare}
-        >
-          <ShareIcon className="size-4" />
-          결과 공유하기
-        </button>
-      </div>
+      <ResultShareBar
+        shareText={`나는 ${primary_type.name}! ${primary_type.badge}`}
+        pageBg={theme.pageBg}
+        onRestart={() => {
+          sessionStorage.removeItem("quizResult");
+          router.push("/quiz/branch");
+        }}
+      />
     </main>
   );
 }
