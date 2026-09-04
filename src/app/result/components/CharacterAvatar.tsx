@@ -1,20 +1,26 @@
 import Image from "next/image";
-import { THEME_STYLES, type ResultData } from "../page";
+import {
+  CHARACTER_IMAGE,
+  KEY_TO_THEME,
+  THEME_STYLES,
+  type TypeKey,
+} from "../theme";
 
 export function CharacterAvatar({
-  data,
+  typeKey,
   size,
   priority,
 }: {
-  data: ResultData;
+  typeKey: TypeKey;
   size: number;
   priority?: boolean;
 }) {
-  if (data.characterImage) {
+  const src = CHARACTER_IMAGE[typeKey];
+  if (src) {
     return (
       <Image
-        src={encodeURI(data.characterImage)}
-        alt={data.type}
+        src={encodeURI(src)}
+        alt={typeKey}
         width={size}
         height={size}
         priority={priority}
@@ -25,7 +31,7 @@ export function CharacterAvatar({
   return (
     <div
       style={{ width: size, height: size }}
-      className={`shrink-0 rounded-full ${THEME_STYLES[data.themeColor].avatarBg}`}
+      className={`shrink-0 rounded-full ${THEME_STYLES[KEY_TO_THEME[typeKey]].avatarBg}`}
     />
   );
 }
