@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AppBar } from "@/components/common/AppBar";
 import { DefaultButton } from "@/components/common/DefaultButton";
+import { ErrorView } from "@/components/common/ErrorView";
 import {
   OptionButton,
   type OptionButtonVariant,
@@ -37,16 +38,7 @@ export function QuizClient({
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   if (questions.length === 0) {
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-center gap-4 px-5 text-center">
-        <p className="text-headline2 text-warm-gray-90">
-          문항을 불러오지 못했어요
-        </p>
-        <DefaultButton variant="primary" onClick={() => router.back()}>
-          돌아가기
-        </DefaultButton>
-      </main>
-    );
+    throw new Error("문항을 불러오지 못했어요");
   }
 
   const question = questions[questionIndex];
@@ -96,6 +88,18 @@ export function QuizClient({
     }
   };
 
+  if (submitError) {
+    return (
+      <ErrorView
+        image="/images/error-result.svg"
+        title="결과를 불러오지 못했냉.."
+        description="잠시 후 다시 시도해 주세요"
+        actionLabel="다시 불러오기"
+        onAction={goNext}
+      />
+    );
+  }
+
   return (
     <main className="flex flex-col min-h-screen pt-11 pb-15">
       <AppBar onBack={goBack} />
@@ -123,9 +127,6 @@ export function QuizClient({
             </OptionButton>
           ))}
         </div>
-        {submitError && (
-          <p className="text-label text-orange-80 mt-3">{submitError}</p>
-        )}
       </div>
       <DefaultButton
         variant="primary"
