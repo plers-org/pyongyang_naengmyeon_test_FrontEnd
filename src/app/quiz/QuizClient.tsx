@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { AppBar } from "@/components/common/AppBar";
 import { DefaultButton } from "@/components/common/DefaultButton";
+import { ErrorView } from "@/components/common/ErrorView";
 import {
   OptionButton,
   type OptionButtonVariant,
@@ -96,6 +97,18 @@ export function QuizClient({
     }
   };
 
+  if (submitError) {
+    return (
+      <ErrorView
+        image="/images/error-result.svg"
+        title="결과를 불러오지 못했냉.."
+        description="잠시 후 다시 시도해 주세요"
+        actionLabel="다시 불러오기"
+        onAction={goNext}
+      />
+    );
+  }
+
   return (
     <main className="flex flex-col min-h-screen pt-11 pb-15">
       <AppBar onBack={goBack} />
@@ -123,9 +136,6 @@ export function QuizClient({
             </OptionButton>
           ))}
         </div>
-        {submitError && (
-          <p className="text-label text-orange-80 mt-3">{submitError}</p>
-        )}
       </div>
       <DefaultButton
         variant="primary"
