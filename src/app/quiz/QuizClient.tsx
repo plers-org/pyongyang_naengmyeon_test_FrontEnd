@@ -38,16 +38,7 @@ export function QuizClient({
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   if (questions.length === 0) {
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-center gap-4 px-5 text-center">
-        <p className="text-headline2 text-warm-gray-90">
-          문항을 불러오지 못했어요
-        </p>
-        <DefaultButton variant="primary" onClick={() => router.back()}>
-          돌아가기
-        </DefaultButton>
-      </main>
-    );
+    throw new Error("문항을 불러오지 못했어요");
   }
 
   const question = questions[questionIndex];

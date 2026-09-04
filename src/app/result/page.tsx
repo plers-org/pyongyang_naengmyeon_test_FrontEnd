@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/badge/Badge";
+import { ErrorView } from "@/components/common/ErrorView";
 import { Tag } from "@/components/tag/Tag";
 import { DefaultButton } from "@/components/common/DefaultButton";
 import {
@@ -198,21 +199,15 @@ export default function Page() {
   if (!loaded) return null;
 
   if (!result) {
+    // TODO: 결과 저장이 세션 → API로 바뀌면 재검토
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center gap-4 px-5 text-center">
-        <p className="text-headline2 text-warm-gray-90">
-          결과를 찾을 수 없어요
-        </p>
-        <p className="text-subtitle1 text-warm-gray-60">
-          테스트를 다시 진행해주세요
-        </p>
-        <DefaultButton
-          variant="primary"
-          onClick={() => router.push("/quiz/branch")}
-        >
-          테스트 하러 가기
-        </DefaultButton>
-      </main>
+      <ErrorView
+        image="/images/error-result.svg"
+        title="결과를 불러오지 못했냉.."
+        description="테스트를 다시 진행해 주세요"
+        actionLabel="테스트 하러 가기"
+        onAction={() => router.push("/quiz/branch")}
+      />
     );
   }
 
