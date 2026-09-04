@@ -35,7 +35,10 @@ beforeEach(() => {
   back.mockClear();
   global.fetch = jest.fn().mockResolvedValue({
     ok: true,
-    json: async () => ({ experience_level: "beginner", questions: mockQuestions }),
+    json: async () => ({
+      experience_level: "beginner",
+      questions: mockQuestions,
+    }),
   });
 });
 
@@ -47,7 +50,7 @@ describe("입문자 문항 플로우", () => {
   it("첫 문항을 보여주고, 선택 전엔 다음 버튼이 비활성화된다", async () => {
     render(await Page());
 
-    expect(screen.getByText("Q1")).toBeInTheDocument();
+    expect(screen.getByText("Q2")).toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
       "좋아하는 국물의 첫 느낌은?",
     );
@@ -74,7 +77,7 @@ describe("입문자 문항 플로우", () => {
     );
     await user.click(screen.getByRole("button", { name: "다음" }));
 
-    expect(screen.getByText("Q2")).toBeInTheDocument();
+    expect(screen.getByText("Q3")).toBeInTheDocument();
   });
 
   it("첫 문항에서 뒤로가기를 누르면 router.back이 호출된다", async () => {
