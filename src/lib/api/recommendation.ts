@@ -3,7 +3,7 @@ import type {
   RecommendationQuestionsResponse,
   RecommendationResultResponse,
   RecommendationSubmitRequest,
-} from "./types";
+} from "./model";
 
 export type ExperienceLevel = "beginner" | "expert";
 

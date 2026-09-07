@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Page from "@/app/result/page";
-import type { RecommendationResultResponse } from "@/lib/api/types";
+import type { RecommendationResultResponse } from "@/lib/api/model";
 
 const push = jest.fn();
 
@@ -11,6 +11,8 @@ jest.mock("next/navigation", () => ({
 }));
 
 const baseResult = {
+  result_id: "test-result-id",
+  created_at: "2026-01-01T00:00:00Z",
   status: "recommended",
   message: null,
   experience_level: "expert",
@@ -19,6 +21,7 @@ const baseResult = {
     name: "우래옥형",
     character_key: "uraeok",
     match_score: 0.9,
+    hashtags: ["진한육향", "깊은감칠맛", "본질파"],
     title: "진하고 든든한 우래옥형",
     subtitle: "가장 진한 고기 향과\n깊은 감칠맛을 좋아해요",
     badge: "본질을 아는 육향파",
@@ -30,12 +33,14 @@ const baseResult = {
     name: "장충동형",
     character_key: "jangchungdong",
     match_score: 0.7,
+    hashtags: ["구수한육향", "풍성한감칠맛", "균형파"],
   },
   farthest_type: {
     key: "dongchimi",
     name: "동치미형",
     character_key: "dongchimi",
     match_score: 0.2,
+    hashtags: ["시원한동치미", "깔끔한끝맛", "청량파"],
   },
   type_scores: [
     { key: "uraeok", name: "우래옥형", match_score: 0.9 },

@@ -6,7 +6,7 @@ import { DefaultButton } from "@/components/common/DefaultButton";
 import { ErrorView } from "@/components/common/ErrorView";
 import { CircleGraph } from "@/components/graph/CircleGraph";
 import { GeoAltFill } from "@/components/icons/GeoAltFill";
-import type { RecommendationResultResponse } from "@/lib/api/types";
+import type { RecommendationResultResponse } from "@/lib/api/model";
 import { CharacterAvatar } from "./components/CharacterAvatar";
 import { ResultShareBar } from "./components/ResultShareBar";
 import { Section } from "./components/Section";

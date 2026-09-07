@@ -15,7 +15,7 @@ import {
   submitRecommendation,
   type ExperienceLevel,
 } from "@/lib/api/recommendation";
-import type { RecommendationQuestion } from "@/lib/api/types";
+import type { RecommendationQuestion } from "@/lib/api/model";
 
 const OPTION_VARIANTS: OptionButtonVariant[] = [
   "option1",
