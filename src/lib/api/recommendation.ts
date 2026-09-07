@@ -19,3 +19,9 @@ export function submitRecommendation(payload: RecommendationSubmitRequest) {
     body: JSON.stringify(payload),
   });
 }
+
+export function getRecommendationResult(resultId: string) {
+  return apiFetch<RecommendationResultResponse>(
+    `/recommendation/results/${resultId}`,
+  );
+}
