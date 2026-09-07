@@ -127,11 +127,13 @@ export function ResultView({
             label="두 번째로 잘 맞는 유형"
             typeKey={secondary_type.key as TypeKey}
             name={secondary_type.name}
+            hashtags={secondary_type.hashtags}
           />
           <TypeMatchCard
             label="가장 거리가 먼 유형"
             typeKey={farthest_type.key as TypeKey}
             name={farthest_type.name}
+            hashtags={farthest_type.hashtags}
           />
         </div>
       </div>

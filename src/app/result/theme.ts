@@ -23,13 +23,6 @@ export const TYPE_LABEL: Record<TypeKey, string> = {
   dongchimi: "동치미형",
 };
 
-export const TYPE_TAGS: Record<TypeKey, string[]> = {
-  uraeok: ["진한육향", "깊은감칠맛", "본질파"],
-  dongchimi: ["시원한동치미", "깔끔한끝맛", "청량파"],
-  uijeongbu: ["맑고담백", "은근한여운", "담백파"],
-  jangchungdong: ["구수한육향", "풍성한감칠맛", "균형파"],
-};
-
 export type ThemeStyle = {
   pageBg: string;
   bannerBg: string;
