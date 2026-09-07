@@ -170,7 +170,7 @@ describe("결과 페이지 (/result/[id])", () => {
 
     await expect(
       Page({ params: Promise.resolve({ id: "missing" }) }),
-    ).rejects.toThrow();
+    ).rejects.toThrow("NEXT_NOT_FOUND");
   });
 
   it("다시 테스트 하기를 누르면 /quiz/branch로 이동한다", async () => {
