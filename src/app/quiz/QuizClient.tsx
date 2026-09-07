@@ -20,6 +20,7 @@ import type {
   RecommendationResultResponse,
 } from "@/lib/api/model";
 import { ResultView } from "../result/ResultView";
+import { BRANCH_STEP_COUNT } from "./constants";
 
 const OPTION_VARIANTS: OptionButtonVariant[] = [
   "option1",
@@ -118,11 +119,11 @@ export function QuizClient({
       <AppBar onBack={goBack} />
       <div className="flex flex-col px-5 pt-3">
         <QuestionProgress
-          current={questionIndex + 2}
-          total={questions.length + 1}
+          current={questionIndex + BRANCH_STEP_COUNT + 1}
+          total={questions.length + BRANCH_STEP_COUNT}
         />
         <p className="text-caption2 text-orange-80 mt-5">
-          Q{question.question_id + 1}
+          Q{question.question_id + BRANCH_STEP_COUNT}
         </p>
         <h1 className="text-headline2 text-warm-gray-90 mt-3 h-32 whitespace-pre-line">
           {question.question_text}
