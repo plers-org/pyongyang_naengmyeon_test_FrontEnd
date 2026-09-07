@@ -154,7 +154,7 @@ describe("결과 페이지 (/result)", () => {
     expect(push).toHaveBeenCalledWith("/quiz/branch");
   });
 
-  it("다시 테스트 하기를 누르면 세션을 비우고 /quiz/branch로 이동한다", async () => {
+  it("다시 테스트 하기를 누르면 /quiz/branch로 이동한다", async () => {
     const user = userEvent.setup();
     seedResult(baseResult);
     render(<Page />);
@@ -163,7 +163,6 @@ describe("결과 페이지 (/result)", () => {
       await screen.findByRole("button", { name: "다시 테스트 하기" }),
     );
 
-    expect(sessionStorage.getItem("quizResult")).toBeNull();
     expect(push).toHaveBeenCalledWith("/quiz/branch");
   });
 });

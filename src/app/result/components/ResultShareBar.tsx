@@ -1,22 +1,23 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { ArrowClockwiseIcon } from "@/components/icons/ArrowClockwiseIcon";
 import { ShareIcon } from "@/components/icons/ShareIcon";
 
 export function ResultShareBar({
   shareText,
   pageBg,
-  onRestart,
 }: {
   shareText: string;
   pageBg: string;
-  onRestart: () => void;
 }) {
+  const router = useRouter();
+
   const handleShare = async () => {
     const shareData = {
       title: "평냉 취향 테스트",
       text: shareText,
-      url: window.location.origin,
+      url: window.location.href,
     };
     if (navigator.share) {
       try {
@@ -37,7 +38,7 @@ export function ResultShareBar({
         type="button"
         aria-label="다시 테스트 하기"
         className="flex size-13.5 shrink-0 items-center justify-center gap-2 rounded-xl border border-neutral-10 bg-white p-3.5"
-        onClick={onRestart}
+        onClick={() => router.push("/quiz/branch")}
       >
         <ArrowClockwiseIcon className="size-4 text-neutral-70" />
       </button>
