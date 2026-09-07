@@ -16,6 +16,13 @@ export const CHARACTER_IMAGE: Record<TypeKey, string> = {
   dongchimi: "/characters/동치미형.svg",
 };
 
+export const TYPE_LABEL: Record<TypeKey, string> = {
+  uraeok: "우래옥형",
+  uijeongbu: "의정부형",
+  jangchungdong: "장충동형",
+  dongchimi: "동치미형",
+};
+
 export const TYPE_TAGS: Record<TypeKey, string[]> = {
   uraeok: ["진한육향", "깊은감칠맛", "본질파"],
   dongchimi: ["시원한동치미", "깔끔한끝맛", "청량파"],
