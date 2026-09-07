@@ -1,10 +1,9 @@
-import { AppBar } from "@/components/common/AppBar";
 import { Skeleton } from "@/components/common/Skeleton";
 
 export default function Loading() {
   return (
     <main className="flex flex-col min-h-screen pt-11 pb-15">
-      <AppBar />
+      <div className="h-[35.996px] w-[375px] bg-white" />
       <div className="flex flex-col px-5 pt-3">
         <div className="flex w-[335px] items-center">
           <Skeleton className="h-1.5 w-71.75 shrink-0 rounded-full" />
