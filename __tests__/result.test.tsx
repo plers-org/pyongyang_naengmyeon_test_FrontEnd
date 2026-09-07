@@ -1,14 +1,19 @@
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import Page from "@/app/result/page";
+import Page from "@/app/result/[id]/page";
 import type { RecommendationResultResponse } from "@/lib/api/model";
 
 const push = jest.fn();
 
 jest.mock("next/navigation", () => ({
   useRouter: () => ({ push }),
+  notFound: jest.fn(() => {
+    throw new Error("NEXT_NOT_FOUND");
+  }),
 }));
+
+const originalFetch = global.fetch;
 
 const baseResult = {
   result_id: "test-result-id",
@@ -83,19 +88,28 @@ const baseResult = {
   ],
 } satisfies RecommendationResultResponse;
 
-function seedResult(result: RecommendationResultResponse) {
-  sessionStorage.setItem("quizResult", JSON.stringify(result));
+function mockFetchOnce(response: {
+  ok: boolean;
+  status?: number;
+  json: () => Promise<unknown>;
+}) {
+  global.fetch = jest.fn().mockResolvedValue(response);
 }
 
 beforeEach(() => {
   push.mockClear();
-  sessionStorage.clear();
 });
 
-describe("결과 페이지 (/result)", () => {
-  it("세션에 저장된 결과를 유형·그래프·맛집으로 렌더링한다", async () => {
-    seedResult(baseResult);
-    render(<Page />);
+afterEach(() => {
+  global.fetch = originalFetch;
+  jest.restoreAllMocks();
+});
+
+describe("결과 페이지 (/result/[id])", () => {
+  it("id로 조회한 결과를 유형·그래프·맛집으로 렌더링한다", async () => {
+    mockFetchOnce({ ok: true, json: async () => baseResult });
+
+    render(await Page({ params: Promise.resolve({ id: "test-result-id" }) }));
 
     expect(
       await screen.findByRole("heading", { level: 1 }),
@@ -114,8 +128,9 @@ describe("결과 페이지 (/result)", () => {
   });
 
   it("map_url이 http(s)일 때만 맛집을 링크로 렌더링한다", async () => {
-    seedResult(baseResult);
-    render(<Page />);
+    mockFetchOnce({ ok: true, json: async () => baseResult });
+
+    render(await Page({ params: Promise.resolve({ id: "test-result-id" }) }));
 
     const link = await screen.findByRole("link", { name: /우래옥/ });
     expect(link).toHaveAttribute("href", "https://map.example.com/uraeok");
@@ -128,13 +143,17 @@ describe("결과 페이지 (/result)", () => {
   });
 
   it("status가 no_recommendation이면 맛집 대신 안내 문구를 보여준다", async () => {
-    seedResult({
-      ...baseResult,
-      status: "no_recommendation",
-      message: "조건에 맞는 가게를 아직 못 찾았어요",
-      recommended_restaurants: [],
+    mockFetchOnce({
+      ok: true,
+      json: async () => ({
+        ...baseResult,
+        status: "no_recommendation",
+        message: "조건에 맞는 가게를 아직 못 찾았어요",
+        recommended_restaurants: [],
+      }),
     });
-    render(<Page />);
+
+    render(await Page({ params: Promise.resolve({ id: "test-result-id" }) }));
 
     expect(
       await screen.findByText("조건에 맞는 가게를 아직 못 찾았어요"),
@@ -142,22 +161,23 @@ describe("결과 페이지 (/result)", () => {
     expect(screen.queryByText("우래옥")).not.toBeInTheDocument();
   });
 
-  it("세션에 결과가 없으면 에러 화면을 보여주고, 버튼으로 테스트로 되돌린다", async () => {
-    const user = userEvent.setup();
-    render(<Page />);
+  it("존재하지 않는 id면 notFound를 호출한다", async () => {
+    mockFetchOnce({
+      ok: false,
+      status: 404,
+      json: async () => ({ detail: "결과를 찾을 수 없습니다." }),
+    });
 
-    expect(
-      await screen.findByRole("heading", { name: "결과를 불러오지 못했냉.." }),
-    ).toBeInTheDocument();
-
-    await user.click(screen.getByRole("button", { name: "테스트 하러 가기" }));
-    expect(push).toHaveBeenCalledWith("/quiz/branch");
+    await expect(
+      Page({ params: Promise.resolve({ id: "missing" }) }),
+    ).rejects.toThrow();
   });
 
   it("다시 테스트 하기를 누르면 /quiz/branch로 이동한다", async () => {
+    mockFetchOnce({ ok: true, json: async () => baseResult });
     const user = userEvent.setup();
-    seedResult(baseResult);
-    render(<Page />);
+
+    render(await Page({ params: Promise.resolve({ id: "test-result-id" }) }));
 
     await user.click(
       await screen.findByRole("button", { name: "다시 테스트 하기" }),
