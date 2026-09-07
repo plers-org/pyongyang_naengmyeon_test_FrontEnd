@@ -10,8 +10,10 @@ import { KEY_TO_THEME, THEME_STYLES, type TypeKey } from "./theme";
 
 export function ResultView({
   result,
+  shareable = true,
 }: {
   result: RecommendationResultResponse;
+  shareable?: boolean;
 }) {
   const {
     primary_type,
@@ -148,6 +150,7 @@ export function ResultView({
       <ResultShareBar
         shareText={`나는 ${primary_type.name}! ${primary_type.badge}`}
         pageBg={theme.pageBg}
+        shareable={shareable}
       />
     </main>
   );
