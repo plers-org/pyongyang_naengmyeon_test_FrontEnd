@@ -75,8 +75,10 @@ export function QuizClient({
           }),
         ),
       });
-      sessionStorage.setItem("quizResult", JSON.stringify(result));
-      router.push("/result");
+      if (!result.result_id) {
+        throw new Error("결과 저장에 실패했어요");
+      }
+      router.push(`/result/${result.result_id}`);
     } catch (error) {
       setSubmitError(
         error instanceof ApiError
