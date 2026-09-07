@@ -49,6 +49,7 @@ export interface paths {
          *
          *     **무엇이 오나** — 결과 화면 하나를 그릴 재료가 전부 들어 있어서, 추가 호출이 필요 없습니다.
          *
+         *     - `result_id` — 이 결과의 영구 주소입니다. 결과 페이지 URL에 넣어두면 새로고침해도, 남에게 링크를 보내도 `GET /api/recommendation/results/{result_id}` 로 같은 결과를 다시 그릴 수 있습니다. **저장에 실패하면 `null` 이 옵니다.** 이때도 아래 결과는 정상이므로, 이 응답 본문으로 화면을 그리고 공유 버튼만 숨기면 됩니다.
          *     - `primary_type` — 대표 유형. 제목·부제·배지·설명 문구와 테마 색까지 들어 있어 그대로 화면에 쓰면 됩니다. 문구를 서버에서 내려주므로 프론트에 유형별 텍스트를 하드코딩하지 마세요.
          *     - `secondary_type` / `farthest_type` — 2순위 유형과 가장 안 맞는 유형. 이름과 캐릭터만 들어 있습니다.
          *     - `type_scores` — 4개 유형 전체의 일치도. 막대 그래프용입니다.
@@ -57,9 +58,37 @@ export interface paths {
          *
          *     **가게가 없을 수 있습니다** — `status` 가 `no_recommendation` 이면 `recommended_restaurants` 가 빈 배열로 오고 `message` 에 안내 문구가 담깁니다. 이때도 유형 판정과 취향 그래프는 정상적으로 채워지므로, 가게 목록 영역만 비우고 나머지 결과는 그대로 보여주면 됩니다.
          *
-         *     **`session_id` 는 선택입니다** — 프론트가 만든 익명 UUID를 넣으면 같은 사용자의 응답을 묶어 유형 분포를 집계할 수 있습니다. 로그인과 무관하며 개인정보를 넣어서는 안 됩니다. 생략해도 결과는 같습니다.
+         *     **`session_id` 는 선택입니다** — 프론트가 만든 익명 UUID를 넣으면 같은 사용자의 응답을 묶어 유형 분포를 집계할 수 있습니다. 로그인과 무관하며 개인정보를 넣어서는 안 됩니다. 생략해도 결과는 같습니다. `result_id` 와는 다른 값이며, `session_id` 로 결과를 조회할 수는 없습니다.
          */
         post: operations["submit_recommendation_api_recommendation_submit_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/recommendation/results/{result_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * 발급받은 결과 ID로 결과 화면 데이터 다시 받기
+         * @description **언제 호출하나** — 결과 페이지가 열릴 때마다 호출합니다. 본인이 방금 제출한 경우든, 공유 링크를 받고 들어온 다른 사람이든 동일합니다.
+         *
+         *     **무엇을 보내나** — `POST /api/recommendation/submit` 응답의 `result_id` 를 경로에 그대로 넣습니다. 답변을 다시 보낼 필요가 없어 **서버 컴포넌트에서 그대로 호출**할 수 있습니다.
+         *
+         *     **무엇이 오나** — `submit` 과 **완전히 같은 형태**의 응답입니다. 결과 화면 컴포넌트를 하나만 두고 두 API의 응답을 같은 타입으로 다루면 됩니다.
+         *
+         *     **같은 ID는 항상 같은 결과** — 유형 판정·취향 점수·추천 가게는 제출 시점에 저장된 값을 그대로 돌려줍니다. 그 뒤 추천 로직이나 가게 데이터가 바뀌어도 이미 공유된 결과는 달라지지 않습니다. 다만 유형 카피(`title`·`reason` 등)와 축 이름은 조회 시점의 최신 문구로 조립되므로, 문구 오타를 고치면 기존 링크에도 반영됩니다.
+         *
+         *     **응답은 캐시해도 됩니다** — 결과가 불변이라 `Cache-Control: public, max-age=3600` 이 함께 옵니다.
+         */
+        get: operations["get_recommendation_result_api_recommendation_results__result_id__get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -104,6 +133,13 @@ export interface components {
              * @description 이 유형과의 일치도(0.0~1.0). 백분율로 바꿔 표시한다.
              */
             match_score: number;
+            /**
+             * Hashtags
+             * @description 이 유형을 한눈에 설명하는 해시태그 3개. 배열 순서대로 노출하면 된다.
+             *
+             *     `#` 은 붙어 있지 않다. 프론트에서 앞에 붙여 `#진한육향` 처럼 그린다. 유형별 문구가 서버에서 오므로 프론트에 태그를 하드코딩하지 않는다.
+             */
+            hashtags: string[];
             /**
              * Title
              * @description 결과 카드 제목. 예: `진하고 든든한 우래옥형`.
@@ -213,6 +249,19 @@ export interface components {
          *     무관하게 항상 채워진다. 가게 추천만 비어 있을 수 있다.
          */
         RecommendationResultResponse: {
+            /**
+             * Result Id
+             * @description 이 결과의 영구 주소(UUID). `GET /api/recommendation/results/{result_id}` 의 경로에 그대로 넣으면 같은 결과를 다시 조회할 수 있고, 그 주소를 그대로 공유하면 된다.
+             *
+             *     **null 일 수 있다.** 결과 저장에 실패한 경우이며, 이때도 아래 결과 필드는 모두 정상이다. 프론트는 값이 있으면 결과 페이지로 이동하고, null이면 이 응답 본문으로 결과를 그린 뒤 공유 버튼만 숨기면 된다.
+             */
+            result_id?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             * @description 결과가 만들어진 시각(UTC, ISO 8601). 조회 시에도 제출 당시의 값이 그대로 온다.
+             */
+            created_at: string;
             /**
              * Status
              * @description `recommended` 면 추천 가게가 담겨 있고, `no_recommendation` 이면 `recommended_restaurants` 가 빈 배열이다. 후자여도 유형과 그래프는 정상이므로 가게 목록 영역만 비우고 나머지는 그대로 보여주면 된다.
@@ -431,6 +480,13 @@ export interface components {
              * @description 이 유형과의 일치도(0.0~1.0). 백분율로 바꿔 표시한다.
              */
             match_score: number;
+            /**
+             * Hashtags
+             * @description 이 유형을 한눈에 설명하는 해시태그 3개. 배열 순서대로 노출하면 된다.
+             *
+             *     `#` 은 붙어 있지 않다. 프론트에서 앞에 붙여 `#진한육향` 처럼 그린다. 유형별 문구가 서버에서 오므로 프론트에 태그를 하드코딩하지 않는다.
+             */
+            hashtags: string[];
         };
         /** ValidationError */
         ValidationError: {
@@ -452,21 +508,6 @@ export interface components {
     headers: never;
     pathItems: never;
 }
-export type HttpValidationError = components['schemas']['HTTPValidationError'];
-export type PrimaryType = components['schemas']['PrimaryType'];
-export type RecommendationAnswer = components['schemas']['RecommendationAnswer'];
-export type RecommendationChoice = components['schemas']['RecommendationChoice'];
-export type RecommendationQuestion = components['schemas']['RecommendationQuestion'];
-export type RecommendationQuestionsResponse = components['schemas']['RecommendationQuestionsResponse'];
-export type RecommendationResultResponse = components['schemas']['RecommendationResultResponse'];
-export type RecommendationSubmitRequest = components['schemas']['RecommendationSubmitRequest'];
-export type RecommendedRestaurant = components['schemas']['RecommendedRestaurant'];
-export type TasteProfile = components['schemas']['TasteProfile'];
-export type TraitScale = components['schemas']['TraitScale'];
-export type TraitScore = components['schemas']['TraitScore'];
-export type TypeScore = components['schemas']['TypeScore'];
-export type TypeSummary = components['schemas']['TypeSummary'];
-export type ValidationError = components['schemas']['ValidationError'];
 export type $defs = Record<string, never>;
 export interface operations {
     get_recommendation_questions_api_recommendation_questions__experience_level__get: {
@@ -544,6 +585,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_recommendation_result_api_recommendation_results__result_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description `submit` 응답으로 받은 결과 ID(UUID). 이 값이 곧 공유 가능한 결과의 주소다. */
+                result_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecommendationResultResponse"];
+                };
+            };
+            /** @description 존재하지 않거나 더 이상 표시할 수 없는 결과 */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "detail": "결과를 찾을 수 없습니다."
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+            /** @description 결과 저장소를 쓸 수 없는 상태 */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "detail": "결과 조회를 사용할 수 없습니다."
+                     *     }
+                     */
+                    "application/json": unknown;
                 };
             };
         };

@@ -3,7 +3,7 @@ import type {
   RecommendationQuestionsResponse,
   RecommendationResultResponse,
   RecommendationSubmitRequest,
-} from "./types";
+} from "./model";
 
 export type ExperienceLevel = "beginner" | "expert";
 
@@ -18,4 +18,10 @@ export function submitRecommendation(payload: RecommendationSubmitRequest) {
     method: "POST",
     body: JSON.stringify(payload),
   });
+}
+
+export function getRecommendationResult(resultId: string) {
+  return apiFetch<RecommendationResultResponse>(
+    `/recommendation/results/${resultId}`,
+  );
 }

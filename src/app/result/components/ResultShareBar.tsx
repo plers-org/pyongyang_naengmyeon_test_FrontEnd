@@ -1,22 +1,25 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { ArrowClockwiseIcon } from "@/components/icons/ArrowClockwiseIcon";
 import { ShareIcon } from "@/components/icons/ShareIcon";
 
 export function ResultShareBar({
   shareText,
   pageBg,
-  onRestart,
+  shareable = true,
 }: {
   shareText: string;
   pageBg: string;
-  onRestart: () => void;
+  shareable?: boolean;
 }) {
+  const router = useRouter();
+
   const handleShare = async () => {
     const shareData = {
       title: "평냉 취향 테스트",
       text: shareText,
-      url: window.location.origin,
+      url: window.location.href,
     };
     if (navigator.share) {
       try {
@@ -37,18 +40,20 @@ export function ResultShareBar({
         type="button"
         aria-label="다시 테스트 하기"
         className="flex size-13.5 shrink-0 items-center justify-center gap-2 rounded-xl border border-neutral-10 bg-white p-3.5"
-        onClick={onRestart}
+        onClick={() => router.push("/quiz/branch")}
       >
         <ArrowClockwiseIcon className="size-4 text-neutral-70" />
       </button>
-      <button
-        type="button"
-        className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-neutral-10 bg-button-secondary-bg-default px-4 py-3.75 text-[16px] font-semibold text-button-secondary-text-default active:bg-button-secondary-bg-pressed active:text-button-secondary-text-pressed"
-        onClick={handleShare}
-      >
-        <ShareIcon className="size-4" />
-        결과 공유하기
-      </button>
+      {shareable && (
+        <button
+          type="button"
+          className="flex flex-1 items-center justify-center gap-2 rounded-2xl border border-neutral-10 bg-button-secondary-bg-default px-4 py-3.75 text-[16px] font-semibold text-button-secondary-text-default active:bg-button-secondary-bg-pressed active:text-button-secondary-text-pressed"
+          onClick={handleShare}
+        >
+          <ShareIcon className="size-4" />
+          결과 공유하기
+        </button>
+      )}
     </div>
   );
 }

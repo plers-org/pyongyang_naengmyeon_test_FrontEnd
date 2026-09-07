@@ -15,7 +15,11 @@ import {
   submitRecommendation,
   type ExperienceLevel,
 } from "@/lib/api/recommendation";
-import type { RecommendationQuestion } from "@/lib/api/types";
+import type {
+  RecommendationQuestion,
+  RecommendationResultResponse,
+} from "@/lib/api/model";
+import { ResultView } from "../result/ResultView";
 
 const OPTION_VARIANTS: OptionButtonVariant[] = [
   "option1",
@@ -36,6 +40,8 @@ export function QuizClient({
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [unsavedResult, setUnsavedResult] =
+    useState<RecommendationResultResponse | null>(null);
 
   if (questions.length === 0) {
     throw new Error("문항을 불러오지 못했어요");
@@ -75,8 +81,11 @@ export function QuizClient({
           }),
         ),
       });
-      sessionStorage.setItem("quizResult", JSON.stringify(result));
-      router.push("/result");
+      if (!result.result_id) {
+        setUnsavedResult(result);
+        return;
+      }
+      router.push(`/result/${result.result_id}`);
     } catch (error) {
       setSubmitError(
         error instanceof ApiError
@@ -87,6 +96,10 @@ export function QuizClient({
       setIsSubmitting(false);
     }
   };
+
+  if (unsavedResult) {
+    return <ResultView result={unsavedResult} shareable={false} />;
+  }
 
   if (submitError) {
     return (
