@@ -13,6 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NODE_ENV === "production"
+      ? "https://www.plers.co.kr"
+      : "http://localhost:3000",
+  ),
   title: "평냉 취향 테스트｜나는 어떤 평냉파일까?",
   description:
     "육향부터 메밀향까지, 내 입맛에 맞는 평양냉면 계열을 알아보세요!",
@@ -21,8 +26,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   themeColor: "#ffffff",
 };
 
