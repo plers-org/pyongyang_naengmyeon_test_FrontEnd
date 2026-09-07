@@ -6,6 +6,7 @@ import { DefaultButton } from "@/components/common/DefaultButton";
 import { OptionButton } from "@/components/common/OptionButton";
 import { QuestionProgress } from "@/components/graph/QuestionProgress";
 import { useRouter } from "next/navigation";
+import { BRANCH_STEP_COUNT, TOTAL_QUESTION_COUNT } from "../constants";
 
 type Answer = "experienced" | "beginner";
 
@@ -17,8 +18,11 @@ export default function Page() {
     <main className="flex flex-col min-h-screen pt-11 pb-15">
       <AppBar onBack={() => router.back()} />
       <div className="flex flex-col px-5 pt-3">
-        <QuestionProgress current={1} total={7} />
-        <p className="text-caption2 text-orange-80 mt-5">Q1</p>
+        <QuestionProgress
+          current={BRANCH_STEP_COUNT}
+          total={TOTAL_QUESTION_COUNT + BRANCH_STEP_COUNT}
+        />
+        <p className="text-caption2 text-orange-80 mt-5">Q{BRANCH_STEP_COUNT}</p>
         <h1 className="text-headline2 text-warm-gray-90 mt-3">
           평양냉면을
           <br />
