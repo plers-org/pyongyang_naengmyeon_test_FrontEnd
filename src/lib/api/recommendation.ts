@@ -23,5 +23,6 @@ export function submitRecommendation(payload: RecommendationSubmitRequest) {
 export function getRecommendationResult(resultId: string) {
   return apiFetch<RecommendationResultResponse>(
     `/recommendation/results/${resultId}`,
+    { next: { revalidate: 3600 } },
   );
 }
