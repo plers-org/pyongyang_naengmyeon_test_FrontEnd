@@ -25,6 +25,8 @@ export default function Home() {
           alt=""
           width={120}
           height={120}
+          loading="eager"
+          fetchPriority="high"
           className="aspect-square h-30 justify-self-stretch"
         />
         <Image
@@ -32,6 +34,8 @@ export default function Home() {
           alt=""
           width={120}
           height={120}
+          loading="eager"
+          fetchPriority="high"
           className="aspect-square h-30 justify-self-stretch"
         />
         <Image
@@ -39,6 +43,8 @@ export default function Home() {
           alt=""
           width={120}
           height={120}
+          loading="eager"
+          fetchPriority="high"
           className="aspect-square h-30 justify-self-stretch"
         />
         <Image
@@ -46,6 +52,8 @@ export default function Home() {
           alt=""
           width={120}
           height={120}
+          loading="eager"
+          fetchPriority="high"
           className="aspect-square h-30 justify-self-stretch"
         />
       </div>
