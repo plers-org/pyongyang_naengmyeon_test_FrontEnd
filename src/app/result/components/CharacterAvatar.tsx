@@ -16,7 +16,8 @@ export function CharacterAvatar({
       alt={`${TYPE_LABEL[typeKey]} 캐릭터`}
       width={size}
       height={size}
-      priority={priority}
+      loading={priority ? "eager" : undefined}
+      fetchPriority={priority ? "high" : undefined}
       className="shrink-0"
     />
   );
