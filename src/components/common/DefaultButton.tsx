@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import type { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from "react";
 
 export type DefaultButtonVariant = "primary" | "secondary";
 export type DefaultButtonSize = "lg" | "md";
@@ -15,11 +15,17 @@ const VARIANT_STYLES: Record<DefaultButtonVariant, string> = {
     "bg-button-secondary-bg-default text-button-secondary-text-default active:bg-button-secondary-bg-pressed active:text-button-secondary-text-pressed disabled:bg-button-secondary-bg-disabled disabled:text-button-secondary-text-disabled",
 };
 
-export type DefaultButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+type DefaultButtonOwnProps = {
   variant?: DefaultButtonVariant;
   size?: DefaultButtonSize;
   icon?: ReactNode;
 };
+
+export type DefaultButtonProps =
+  | (ButtonHTMLAttributes<HTMLButtonElement> &
+      DefaultButtonOwnProps & { href?: undefined })
+  | (AnchorHTMLAttributes<HTMLAnchorElement> &
+      DefaultButtonOwnProps & { href: string });
 
 export function DefaultButton({
   variant = "primary",
@@ -27,22 +33,43 @@ export function DefaultButton({
   icon,
   className,
   children,
+  href,
   ...props
 }: DefaultButtonProps) {
-  return (
-    <button
-      className={[
-        "cursor-pointer items-center justify-center gap-2 text-center leading-[1.4] transition-colors disabled:cursor-not-allowed",
-        SIZE_STYLES[size],
-        VARIANT_STYLES[variant],
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
-      {...props}
-    >
+  const classes = [
+    "cursor-pointer items-center justify-center gap-2 text-center leading-[1.4] transition-colors disabled:cursor-not-allowed",
+    SIZE_STYLES[size],
+    VARIANT_STYLES[variant],
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const content = (
+    <>
       {icon && <span className="size-4 shrink-0">{icon}</span>}
       {children}
+    </>
+  );
+
+  if (href) {
+    return (
+      <a
+        className={classes}
+        href={href}
+        {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <button
+      className={classes}
+      {...(props as ButtonHTMLAttributes<HTMLButtonElement>)}
+    >
+      {content}
     </button>
   );
 }
