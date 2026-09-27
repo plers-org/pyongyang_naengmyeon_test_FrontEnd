@@ -8,6 +8,8 @@ import { Section } from "./components/Section";
 import { TypeMatchCard } from "./components/TypeMatchCard";
 import { KEY_TO_THEME, THEME_STYLES, type TypeKey } from "./theme";
 
+const PYEONGNAENG_MAP_URL = "https://naver.me/GQG7VNHR";
+
 export function ResultView({
   result,
   shareable = true,
@@ -141,8 +143,13 @@ export function ResultView({
       </div>
 
       <div className="px-5 pt-3">
-        {/* TODO: 지도 라우트 나오면 활성화 */}
-        <DefaultButton variant="primary" icon={<GeoAltFill />} disabled>
+        <DefaultButton
+          variant="primary"
+          icon={<GeoAltFill />}
+          href={PYEONGNAENG_MAP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           평냉 지도 보기
         </DefaultButton>
       </div>
