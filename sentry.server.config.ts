@@ -8,7 +8,7 @@ Sentry.init({
   dsn: "https://9641629570d8a7420be332ed38a3215f@o4512212940161024.ingest.de.sentry.io/4512212954841168",
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
-  tracesSampleRate: 1,
+  tracesSampleRate: 0.2,
 
   // Turns off collection of data that could identify users. Adjust per category:
   // https://docs.sentry.io/platforms/javascript/configuration/options/#dataCollection
