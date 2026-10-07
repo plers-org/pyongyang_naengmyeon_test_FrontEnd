@@ -21,7 +21,7 @@ export default function Home() {
       </p>
       <div className="mt-7.5 grid w-60 grid-cols-2 grid-rows-2">
         <Image
-          src="/characters/우래옥형.svg"
+          src={encodeURI("/characters/우래옥형.svg")}
           alt=""
           width={120}
           height={120}
@@ -30,7 +30,7 @@ export default function Home() {
           className="aspect-square h-30 justify-self-stretch"
         />
         <Image
-          src="/characters/의정부형.svg"
+          src={encodeURI("/characters/의정부형.svg")}
           alt=""
           width={120}
           height={120}
@@ -39,7 +39,7 @@ export default function Home() {
           className="aspect-square h-30 justify-self-stretch"
         />
         <Image
-          src="/characters/동치미형.svg"
+          src={encodeURI("/characters/동치미형.svg")}
           alt=""
           width={120}
           height={120}
@@ -48,7 +48,7 @@ export default function Home() {
           className="aspect-square h-30 justify-self-stretch"
         />
         <Image
-          src="/characters/장충동형.svg"
+          src={encodeURI("/characters/장충동형.svg")}
           alt=""
           width={120}
           height={120}
